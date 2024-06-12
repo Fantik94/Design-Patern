@@ -33,13 +33,14 @@ def ask_yes_no_question(prompt):
 def main():
     while True:
         game_manager = GameManager.get_instance()
-
-        print(Fore.CYAN + "Choisissez un type de personnage :")
+        
+        print(Fore.BLUE + "Bienvenue dans le jeu RPG!\n")
+        print(Fore.CYAN + "Choisissez classe :")
         types = ["Guerrier", "Mage", "Archer"]
         for i, type_pers in enumerate(types):
             print(f"{i + 1}. {type_pers}")
 
-        choix = get_valid_input("Entrez le numéro du type de personnage : ", [1, 2, 3])
+        choix = get_valid_input("Entrez le numéro : ", [1, 2, 3])
         
         nom = input("Entrez le nom de votre personnage : ")
         personnage = CharacterFactory.create_character(types[choix - 1], nom)
