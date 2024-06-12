@@ -1,7 +1,8 @@
 from game_manager import GameManager
-from character_factory import CharacterFactory, Mage, Archer
+from character_builder import CharacterBuilder
 from enemy import Enemy
 from colorama import init, Fore, Style
+from character import Archer, Mage
 import time
 
 init(autoreset=True)
@@ -16,9 +17,9 @@ def get_valid_input(prompt, valid_choices, default_choice=None):
             if choice in valid_choices:
                 return choice
             else:
-                print("Choix invalide. Veuillez entrer un numéro valide.")
+                print(Fore.RED + "Choix invalide. Veuillez entrer un numéro valide." + Style.RESET_ALL)
         except ValueError:
-            print("Entrée invalide. Veuillez entrer un numéro.")
+            print(Fore.RED + "Entrée invalide. Veuillez entrer un numéro." + Style.RESET_ALL)
 
 def print_separator():
     print(Fore.YELLOW + "\n" + "=" * 50 + "\n" + Style.RESET_ALL)
@@ -28,22 +29,26 @@ def ask_yes_no_question(prompt):
         user_input = input(prompt).strip().lower()
         if user_input in ["oui", "non"]:
             return user_input == "oui"
-        print("Réponse invalide. Veuillez répondre par 'oui' ou 'non'.")
+        print(Fore.RED + "Réponse invalide. Veuillez répondre par 'oui' ou 'non'." + Style.RESET_ALL)
+
+def display_health_status(entity, entity_type):
+    health_bar = entity.display_health()
+    return f"{Fore.CYAN if entity_type == 'joueur' else Fore.RED}{entity.name} - Barre de vie : {health_bar}{Style.RESET_ALL}"
 
 def main():
     while True:
         game_manager = GameManager.get_instance()
-        
-        print(Fore.BLUE + "Bienvenue dans le jeu RPG!\n")
-        print(Fore.CYAN + "Choisissez classe :")
+
+        print(Fore.CYAN + "Choisissez un type de personnage :")
         types = ["Guerrier", "Mage", "Archer"]
         for i, type_pers in enumerate(types):
-            print(f"{i + 1}. {type_pers}")
+            print(f"{Fore.GREEN}{i + 1}. {type_pers}{Style.RESET_ALL}")
 
-        choix = get_valid_input("Entrez le numéro : ", [1, 2, 3])
+        choix = get_valid_input("Entrez le numéro du type de personnage : ", [1, 2, 3])
         
         nom = input("Entrez le nom de votre personnage : ")
-        personnage = CharacterFactory.create_character(types[choix - 1], nom)
+        builder = CharacterBuilder().set_name(nom).set_type(types[choix - 1])
+        personnage = builder.build()
         game_manager.add_character(personnage)
 
         print(f"\n{Fore.GREEN}{personnage.name} rejoint la bataille!")
@@ -99,7 +104,7 @@ def main():
                 
                 if damage == float('inf'):
                     print(Fore.RED + "Coup fatal ! L'ennemi est éliminé d'un seul coup.")
-                    ennemi.take_damage(ennemi.health_points)  # Inflict damage equal to the enemy's health to ensure death
+                    ennemi.take_damage(ennemi.health_points)  # Inflige des dégâts égaux aux points de vie de l'ennemi pour assurer la mort
                 elif damage == 0 and ultimate:
                     print(Fore.RED + "L'attaque ultime a échoué ! Vous perdez la moitié de vos points de vie.")
                     personnage.health_points = int(personnage.health_points / 2)
@@ -115,32 +120,32 @@ def main():
 
                     game_manager.add_battle_history(
                         f"{Fore.CYAN}Étage {floor_number}: {personnage.attack_strategy.attack()} - Dégâts : {damage} {'(Coup critique!)' if critical else ''} (Vol de vie : {lifesteal_amount})\n"
-                        f"{Fore.BLUE}Joueur ({personnage.name}) - Points de vie : {personnage.health_points}{Style.RESET_ALL}\n"
-                        f"{Fore.RED}Ennemi ({ennemi.name}) - Points de vie : {ennemi.health_points}{Style.RESET_ALL}"
+                        f"{display_health_status(personnage, 'joueur')}\n"
+                        f"{display_health_status(ennemi, 'ennemi')}"
                     )
 
                 # Affichage des barres de vie
-                print(f"{personnage.name} - Barre de vie : {personnage.display_health()}")
-                print(f"{ennemi.display_info()} - Barre de vie : {ennemi.display_health()}")
+                print(display_health_status(personnage, 'joueur'))
+                print(display_health_status(ennemi, 'ennemi'))
 
                 if ennemi.health_points > 0:
                     # L'ennemi attaque le joueur
                     damage = ennemi.attack()
                     personnage.health_points -= damage
                     print(f"\n{Fore.RED}{ennemi.name} attaque et inflige {damage} dégâts!")
-                    print(f"{personnage.name} - Barre de vie : {personnage.display_health()}")
+                    print(display_health_status(personnage, 'joueur'))
                     game_manager.add_battle_history(
                         f"{Fore.RED}Étage {floor_number}: {ennemi.name} attaque - Dégâts : {damage}\n"
-                        f"{Fore.BLUE}Joueur ({personnage.name}) - Points de vie : {personnage.health_points}{Style.RESET_ALL}\n"
-                        f"{Fore.RED}Ennemi ({ennemi.name}) - Points de vie : {ennemi.health_points}{Style.RESET_ALL}"
+                        f"{display_health_status(personnage, 'joueur')}\n"
+                        f"{display_health_status(ennemi, 'ennemi')}"
                     )
 
                     if personnage.health_points <= 0:
                         print(f"\n{Fore.RED}{personnage.name} est mort!")
-                        GameManager._instance = None  # Reset singleton instance
+                        GameManager.reset_instance()  # Réinitialise l'instance singleton
                         break
 
-                time.sleep(0.5)  # Pause for better readability
+                time.sleep(0.3)  # Pause pour une meilleure lisibilité
 
             if personnage.health_points <= 0:
                 break
@@ -148,11 +153,11 @@ def main():
             print_separator()
             print(f"\n{Fore.GREEN}{ennemi.name} a été vaincu à l'étage {floor_number}!")
             
-            # Heal 50% after each level if the player is still alive
+            # Heal 50% après chaque niveau si le joueur est encore en vie
             if personnage.health_points > 0:
                 heal_amount = personnage.heal(0.5)  
                 print(f"\n{Fore.GREEN}{personnage.name} se soigne de {heal_amount} points de vie à la fin de l'étage!")
-                print(f"{personnage.name} - Barre de vie : {personnage.display_health()}")
+                print(display_health_status(personnage, 'joueur'))
 
             # Augmenter les points de vie et les dégâts du personnage
             personnage.level_up()
@@ -160,7 +165,7 @@ def main():
             # Augmenter les chances d'ennemis de haute rareté
             rarity_weights = [max(weight - 5, 0) for weight in rarity_weights]
 
-            # Add separator for each floor in battle history
+            # Ajouter un séparateur pour chaque étage dans l'historique des combats
             game_manager.add_battle_history(
                 "=" * 50 + f"\n{Fore.YELLOW}Fin de l'étage {floor_number}\n" + "=" * 50 + Style.RESET_ALL
             )
@@ -168,17 +173,16 @@ def main():
         if personnage.health_points > 0:
             print(f"\n{Fore.GREEN}{personnage.name} a survécu aux 10 étages!")
         else:
-            print(f"\n{Fore.RED}{'='*10} FIN DU JEU {'='*10}\n{Style.RESET_ALL}")
+            print(f"\n{Fore.RED}{'='*10} FIN DU JEU {'='*10}\nVoici l'histoire des combats :\n{'='*10} FIN DU JEU {'='*10}{Style.RESET_ALL}")
 
-        if ask_yes_no_question("Voulez-vous voir l'historique des combats ? (oui/non) : "):
+        if ask_yes_no_question("Voulez-vous voir l'historique des combats ? (oui/non) "):
             print_separator()
             for record in game_manager.battle_history:
                 print(record)
 
-        if not ask_yes_no_question("Voulez-vous relancer le jeu ? (oui/non) : "):
-            print("Merci d'avoir joué !")
+        if not ask_yes_no_question("Voulez-vous relancer le jeu ? (oui/non) "):
+            print(Fore.YELLOW + "Merci d'avoir joué ! À la prochaine !" + Style.RESET_ALL)
             break
 
 if __name__ == "__main__":
     main()
-#test

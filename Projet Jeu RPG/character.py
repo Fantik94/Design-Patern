@@ -13,7 +13,6 @@ class Character:
         self.ultimate_attacks_remaining = 1
         self.initial_rarity = None
         self.initial_name = None
-        self.initial_attack_strategy = None
 
     def attack(self, powerful=False, ultimate=False):
         if powerful and self.powerful_attacks_remaining > 0:
@@ -34,7 +33,7 @@ class Character:
         pass  # Subclasses will override this method
 
     def get_initial_attack_strategy(self):
-        return self.initial_attack_strategy
+        pass  # Subclasses will override this method
 
     def heal(self, percentage=None):
         if percentage is None:
@@ -59,14 +58,14 @@ class Character:
     def level_up(self):
         self.max_health_points = int(self.max_health_points * 1.1)
         self.health_points = self.max_health_points
-        self.attack_strategy.base_damage_min = int(self.attack_strategy.base_damage_min * 1.2)
-        self.attack_strategy.base_damage_max = int(self.attack_strategy.base_damage_max * 1.2)
+        self.attack_strategy.base_damage_min = int(self.attack_strategy.base_damage_min * 1.15)
+        self.attack_strategy.base_damage_max = int(self.attack_strategy.base_damage_max * 1.15)
         self.powerful_attacks_remaining = 2
         self.ultimate_attacks_remaining = 1
 
     def display_health(self):
         health_bar = '█' * (self.health_points // 10) + '-' * (10 - self.health_points // 10)
-        return f"{Fore.RED}♥ {self.health_points:.1f} [{health_bar}]{Style.RESET_ALL}"
+        return f"{Fore.RED}♥ {self.health_points} [{health_bar}]{Style.RESET_ALL}"
 
 # Concrete Characters
 class Warrior(Character):
@@ -75,7 +74,6 @@ class Warrior(Character):
         self.attack_strategy = SwordAttack()
         self.initial_rarity = self.attack_strategy.rarity
         self.initial_name = self.attack_strategy.name
-        self.initial_attack_strategy = SwordAttack(rarity=self.initial_rarity, base_name=self.initial_name)
 
     def change_to_powerful_attack(self):
         self.attack_strategy = PowerfulSwordAttack(rarity=self.initial_rarity, base_name=self.initial_name)
@@ -83,13 +81,15 @@ class Warrior(Character):
     def change_to_ultimate_attack(self):
         self.attack_strategy = UltimateSwordAttack(rarity=self.initial_rarity, base_name=self.initial_name)
 
+    def get_initial_attack_strategy(self):
+        return SwordAttack(rarity=self.initial_rarity, base_name=self.initial_name)
+
 class Mage(Character):
     def __init__(self, name):
         super().__init__(name, health_points=100, damage_multiplier=1.2)
         self.attack_strategy = MagicAttack()
         self.initial_rarity = self.attack_strategy.rarity
         self.initial_name = self.attack_strategy.name
-        self.initial_attack_strategy = MagicAttack(rarity=self.initial_rarity, base_name=self.initial_name)
 
     def change_to_powerful_attack(self):
         self.attack_strategy = PowerfulMagicAttack(rarity=self.initial_rarity, base_name=self.initial_name)
@@ -97,16 +97,21 @@ class Mage(Character):
     def change_to_ultimate_attack(self):
         self.attack_strategy = UltimateMagicAttack(rarity=self.initial_rarity, base_name=self.initial_name)
 
+    def get_initial_attack_strategy(self):
+        return MagicAttack(rarity=self.initial_rarity, base_name=self.initial_name)
+
 class Archer(Character):
     def __init__(self, name):
         super().__init__(name, health_points=120, damage_multiplier=1.1)
         self.attack_strategy = BowAttack()
         self.initial_rarity = self.attack_strategy.rarity
         self.initial_name = self.attack_strategy.name
-        self.initial_attack_strategy = BowAttack(rarity=self.initial_rarity, base_name=self.initial_name)
 
     def change_to_powerful_attack(self):
         self.attack_strategy = PowerfulBowAttack(rarity=self.initial_rarity, base_name=self.initial_name)
 
     def change_to_ultimate_attack(self):
         self.attack_strategy = UltimateBowAttack(rarity=self.initial_rarity, base_name=self.initial_name)
+
+    def get_initial_attack_strategy(self):
+        return BowAttack(rarity=self.initial_rarity, base_name=self.initial_name)
