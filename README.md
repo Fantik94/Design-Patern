@@ -167,6 +167,6 @@ Le jeu est implémenté avec plusieurs classes et fichiers pour organiser le cod
     ```
 4. Suivez les instructions affichées pour choisir un personnage et combattre les ennemis.
 
-## Auteurs
+## Auteur
 
 - `RINGLER Baptiste`, module de Design Patern (H3 Hitema)
