@@ -161,11 +161,12 @@ Le jeu est implémenté avec plusieurs classes et fichiers pour organiser le cod
 
 1. Clonez le repository.
 2. Assurez-vous d'avoir Python installé.
-3. Exécutez le fichier `main.py`. 
+3. `cd Projet Jeu RPG`
+4. Exécutez le fichier `main.py`. 
     ```
     python main.py
     ```
-4. Suivez les instructions affichées pour choisir un personnage et combattre les ennemis.
+5. Suivez les instructions affichées pour choisir un personnage et combattre les ennemis.
 
 ## Auteur
 
