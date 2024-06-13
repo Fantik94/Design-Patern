@@ -156,24 +156,17 @@ Le jeu est implémenté avec plusieurs classes et fichiers pour organiser le cod
 - [x] Implémenter la logique principale du jeu avec une boucle de jeu (fichier : `main.py`).
 - [x] Améliorer l'affichage des points de vie et des barres de santé pour plus de lisibilité.
 
-## Fichiers principaux du projet
-
-- `main.py`: Point d'entrée principal du jeu.
-- `game_manager.py`: Implémentation du Singleton pour gérer l'état global du jeu.
-- `character_factory.py`: Implémentation de la Factory pour créer des personnages.
-- `character_builder.py`: Implémentation du Builder pour construire les personnages.
-- `enemy.py`: Classe pour les ennemis avec leur logique.
-- `attack_strategy.py`: Implémentation des différentes stratégies d'attaque.
-- `character.py`: Définitions des classes de personnages.
 
 ## Comment jouer
 
 1. Clonez le repository.
 2. Assurez-vous d'avoir Python installé.
-3. Exécutez le fichier `main.py`.
+3. Exécutez le fichier `main.py`. 
+    ```
+    python main.py
+    ```
 4. Suivez les instructions affichées pour choisir un personnage et combattre les ennemis.
 
 ## Auteurs
 
-- [RINGLER Baptiste]
-- [gpt]
+- `RINGLER Baptiste`, module de Design Patern (H3 Hitema)
