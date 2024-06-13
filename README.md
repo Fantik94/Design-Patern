@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Dans ce jeu de rôle textuel, les joueurs choisissent un personnage (guerrier, mage, archer, etc.) et affrontent des ennemis. Chaque personnage a une stratégie d'attaque différente et unique. Le jeu est structuré pour utiliser les patterns Singleton, Factory, et Strategy.
+Dans ce jeu de rôle textuel, les joueurs choisissent un personnage (guerrier, mage, archer) et affrontent des ennemis. Chaque personnage a une stratégie d'attaque différente et unique. Le jeu est structuré pour utiliser les patterns Singleton, Factory, et Strategy.
 
 ## Objectifs pédagogiques
 
@@ -122,7 +122,7 @@ Dans ce jeu de rôle textuel, les joueurs choisissent un personnage (guerrier, m
 
 ## Prérequis avancé
 
-- Prendre en compte la rareté de l’attaque pour l'ennemie.
+- Prendre en compte la rareté de l’attaque pour l'ennemi.
 - Faire 10 combats.
 - Avoir un ennemi différent à chaque étage.
 - Mettre un système de Heal en place.

@@ -119,7 +119,7 @@ def main():
                     print(f"{Fore.GREEN}Vous récupérez {lifesteal_amount} points de vie grâce au vol de vie !")
 
                     game_manager.add_battle_history(
-                        f"{Fore.CYAN}Étage {floor_number}: {personnage.attack_strategy.attack()} - Dégâts : {damage} {'(Coup critique!)' if critical else ''} (Vol de vie : {lifesteal_amount})\n"
+                        f"{Fore.CYAN}Étage {floor_number}: {personnage.attack_strategy.attack()} - Dégâts : {damage} {Fore.RED}{'(Coup critique!)' if critical else ''} (Vol de vie : {lifesteal_amount})\n"
                         f"{display_health_status(personnage, 'joueur')}\n"
                         f"{display_health_status(ennemi, 'ennemi')}"
                     )
