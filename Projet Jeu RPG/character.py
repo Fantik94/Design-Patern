@@ -58,8 +58,8 @@ class Character:
     def level_up(self):
         self.max_health_points = int(self.max_health_points * 1.1)
         self.health_points = self.max_health_points
-        self.attack_strategy.base_damage_min = int(self.attack_strategy.base_damage_min * 1.15)
-        self.attack_strategy.base_damage_max = int(self.attack_strategy.base_damage_max * 1.15)
+        self.attack_strategy.base_damage_min = int(self.attack_strategy.base_damage_min * 1.18)
+        self.attack_strategy.base_damage_max = int(self.attack_strategy.base_damage_max * 1.18)
         self.powerful_attacks_remaining = 2
         self.ultimate_attacks_remaining = 1
 
@@ -70,7 +70,7 @@ class Character:
 # Concrete Characters
 class Warrior(Character):
     def __init__(self, name):
-        super().__init__(name, health_points=150, damage_multiplier=1.0)
+        super().__init__(name, health_points=150, damage_multiplier=1.03)
         self.attack_strategy = SwordAttack()
         self.initial_rarity = self.attack_strategy.rarity
         self.initial_name = self.attack_strategy.name
