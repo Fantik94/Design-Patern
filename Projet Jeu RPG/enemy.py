@@ -40,7 +40,7 @@ class Enemy:
         self.type = self.random_type()
         self.rarity = self.random_rarity(rarity_weights, floor_number)
         self.health_points = int(base_health_points * self.RARITY_HEALTH_MULTIPLIERS[self.rarity] * self.TYPE_HEALTH_MULTIPLIERS[self.type] * (1.1 ** (floor_number - 1)))
-        self.base_attack_damage = base_attack_damage * (1.09 ** (floor_number - 1)) * (1.09 ** (floor_number - 1)) * self.RARITY_DAMAGE_MULTIPLIERS[self.rarity]
+        self.base_attack_damage = base_attack_damage * (1.119 ** (floor_number - 1)) * (1.1109 ** (floor_number - 1)) * self.RARITY_DAMAGE_MULTIPLIERS[self.rarity]
         self.color = self.RARITY_COLORS[self.rarity]
 
     def random_type(self):
